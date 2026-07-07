@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indwoke Strategy Deck - Final</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Arial:wght@400;700&family=Roboto:wght@400;500;700&display=swap');
+        
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #d8d8d8; /* Darkened backdrop slightly to make the slide pop */
+            overflow: hidden;
+            color: #111; /* Darkened base text */
+        }
+
+        .deck-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .slide {
+            width: 95vw;
+            height: 90vh;
+            position: absolute;
+            background: #ffffff;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            padding: 40px 60px;
+            box-sizing: border-box;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.25); /* Deeper shadow for better depth */
+            z-index: 1;
+        }
+
+        .slide.active { opacity: 1; z-index: 10; }
+
+        .section-tag {
+            font-size: 13px; /* Increased for visibility */
+            font-weight: 700;
+            color: #444; /* Darkened for contrast */
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 8px;
+        }
+
+        .action-title {
+            font-size: 26px;
+            font-weight: 700;
+            color: #002855;
+            border-bottom: 3px solid #002855; /* Thicker border */
+            padding-bottom: 12px;
+            margin-bottom: 25px;
+            line-height: 1.3;
+        }
+
+        .content-area {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+        }
+
+        .three-col { display: flex; justify-content: space-between; gap: 25px; }
+        .two-col { display: flex; justify-content: space-between; gap: 30px; height: 100%; align-items: stretch; }
+        
+        .mck-box {
+            flex: 1;
+            background: #f8f9fa;
+            padding: 22px;
+            border-top: 5px solid #002855;
+            border-bottom: 1px solid #c8c8c8;
+            border-left: 1px solid #c8c8c8;
+            border-right: 1px solid #c8c8c8;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .mck-box h3 { color: #002855; font-size: 17px; margin-top: 0; border-bottom: 2px solid #ddd; padding-bottom: 10px;}
+        .mck-box p, .mck-box li { font-size: 15px; line-height: 1.6; color: #222;} /* Increased size and darkened */
+        ul { padding-left: 20px; margin-top: 10px; }
+        li { margin-bottom: 10px; }
+
+        .chevron-container { display: flex; width: 100%; margin: 20px 0; }
+        .chevron {
+            flex: 1;
+            background: #002855;
+            color: white;
+            padding: 15px 20px 15px 30px;
+            position: relative;
+            margin-right: 5px;
+            font-size: 15px;
+            font-weight: bold;
+        }
+        .chevron:before {
+            content: ""; position: absolute; top: 0; left: 0; width: 0; height: 0;
+            border-top: 25px solid transparent; border-bottom: 25px solid transparent; border-left: 15px solid white;
+        }
+        .chevron:after {
+            content: ""; position: absolute; top: 0; right: -15px; width: 0; height: 0;
+            border-top: 25px solid transparent; border-bottom: 25px solid transparent; border-left: 15px solid #002855; z-index: 1;
+        }
+        .chevron:first-child:before { display: none; }
+        .chevron:first-child { padding-left: 20px; }
+        .chevron-light { background: #e9ecef; color: #002855; border: 1px solid #ccc; border-right: none;}
+        .chevron-light:after { border-left-color: #e9ecef; }
+
+        .mck-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }
+        .mck-table th { background: #002855; color: #fff; padding: 12px; text-align: left; border: 1px solid #002855; font-weight: 700; }
+        .mck-table td { padding: 12px; border: 1px solid #bbb; background: #fff; color: #222; }
+        .mck-table tr:nth-child(even) td { background: #f1f3f5; }
+        
+        .harvey-ball { display: inline-block; width: 14px; height: 14px; border-radius: 50%; border: 2px solid #002855; margin-right: 6px; vertical-align: middle; }
+        .hb-full { background: #002855; }
+
+        .bar-chart { display: flex; height: 200px; align-items: flex-end; justify-content: space-around; border-bottom: 2px solid #111; border-left: 2px solid #111; position: relative; margin: 20px 40px 0 40px; }
+        .bar-group { display: flex; gap: 15px; align-items: flex-end; height: 100%; }
+        .bar-col { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; }
+        .bar { width: 45px; position: relative; background: #868e96; } /* Darkened inactive bar */
+        .bar-primary { background: #002855; }
+        .bar-label { font-size: 12px; margin-top: 8px; font-weight: bold; color: #333; }
+        .bar-val { position: absolute; top: -22px; width: 100%; text-align: center; font-size: 13px; font-weight: bold; color: #111; }
+
+        /* Slide 3 Whitespace CSS */
+        .skok-matrix {
+            position: relative;
+            width: 70%;
+            height: 55vh;
+            margin: 0 auto;
+            border-left: 3px solid #111;
+            border-bottom: 3px solid #111;
+            background: linear-gradient(to top right, #f1f3f5, #fff);
+        }
+        
+        .axis-label { position: absolute; font-weight: bold; font-size: 15px; color: #333; text-transform: uppercase; }
+        .y-axis { top: 50%; left: -60px; transform: translateY(-50%) rotate(-90deg); }
+        .x-axis { bottom: -45px; left: 50%; transform: translateX(-50%); }
+        .x-low { bottom: -25px; left: 10px; font-size: 13px; color: #555;}
+        .x-high { bottom: -25px; right: 10px; font-size: 13px; color: #555;}
+        .y-low { bottom: 10px; left: -45px; font-size: 13px; color: #555;}
+        .y-high { top: 10px; left: -45px; font-size: 13px; color: #555;}
+
+        .matrix-quad-lines { position: absolute; top: 0; left: 50%; width: 1px; height: 100%; background: #ccc; border-left: 2px dashed #777; }
+        .matrix-quad-lines-h { position: absolute; top: 50%; left: 0; width: 100%; height: 1px; background: #ccc; border-top: 2px dashed #777; }
+
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 13px;
+            color: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            text-align: center;
+            padding: 10px;
+        }
+
+        .bubble-competitor { background: #5c636a; } /* Deepened for white text contrast */
+        .bubble-indwoke { background: #002855; border: 3px solid #00152c; z-index: 10; font-size: 14px;}
+        .whitespace-label { position: absolute; top: 10%; right: 10%; font-size: 19px; font-weight: bold; color: #002855; text-transform: uppercase;}
+
+        .tracker { position: absolute; bottom: 20px; right: 60px; font-size: 13px; color: #666; font-weight: bold; }
+        .nav-zone { position: absolute; top: 0; width: 8%; height: 100%; z-index: 20; cursor: pointer; }
+        .nav-left { left: 0; } .nav-right { right: 0; }
+        
+        .logo { position: absolute; top: 35px; right: 60px; z-index: 100; }
+        .logo img { 
+            height: 55px; /* Scaled slightly larger */
+            width: auto; 
+            object-fit: contain; 
+            image-rendering: -webkit-optimize-contrast; /* Forces crisp rendering */
+            image-rendering: crisp-edges; 
+        }
+
+        /* Talking Track Styles */
+        .talking-track {
+            margin-top: auto;
+            background: #e1eff9; /* Richer blue */
+            padding: 18px 25px;
+            font-style: italic;
+            font-size: 16px;
+            font-weight: 500;
+            color: #002855; /* Navy blue for ultimate contrast */
+            border-left: 4px solid #002855;
+            font-family: 'Roboto', sans-serif;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="deck-container">
+    <div class="nav-zone nav-left" onclick="prevSlide()"></div>
+    <div class="nav-zone nav-right" onclick="nextSlide()"></div>
+
+    <div class="slide active">
+        <div class="logo"><img src="INDIWOKE-Final-Logo-02-300x113.png" alt="Indwoke Logo"></div>
+        <div class="section-tag">I. Executive Summary</div>
+        <div class="action-title">Indwoke transforms unverified grassroots data into auditable evidence, creating a high-margin operating system for social impact.</div>
+        <div class="content-area">
+            <div class="three-col">
+                <div class="mck-box">
+                    <h3>The Trust Deficit</h3>
+                    <p>Donors and policymakers lack visibility into capital deployment. We solve this fundamental problem of trust via a secure, end-to-end data operating system designed for the last mile.</p>
+                </div>
+                <div class="mck-box">
+                    <h3>Frictionless Capture</h3>
+                    <p>We replace fragmented paper tracking and messy spreadsheets with an "Instagram-simple" offline-first mobile architecture, requiring zero technical literacy from field agents.</p>
+                </div>
+                <div class="mck-box">
+                    <h3>Public Policy Intelligence</h3>
+                    <p>By automating compliance and verification, we build a permanent, scalable library of public policy intelligence for global stakeholders without serving as a predatory data broker.</p>
+                </div>
+            </div>
+            <div class="talking-track">
+                "To understand why this operating system is necessary, we must first look at the structural failures of current impact tracking."
+            </div>
+        </div>
+        <div class="tracker">1 / 20</div>
+    </div>
+
+    <div class="slide">
+        <div class="logo"><img src="INDIWOKE-Final-Logo-02-300x113.png" alt="Indwoke Logo"></div>
+        <div class="section-tag">I. Context & Complication</div>
+        <div class="action-title">Structural conflicts and strict privacy regulations expose traditional impact tracking to massive legal and capital risks.</div>
+        <div class="content-area">
+            <div class="two-col" style="height: auto;">
+                <div class="mck-box" style="border-top-color: #8b0000;">
+                    <h3 style="color: #8b0000; border-bottom-color: #e5b3b3;">Principal-Agent Conflict</h3>
+                    <p>Implementation groups currently grade their own homework. This structural conflict invalidates independent audits, masks operational failures, and results in 'pencil-whipped' datasets.</p>
+                </div>
+                <div class="mck-box" style="border-top-color: #8b0000;">
+                    <h3 style="color: #8b0000; border-bottom-color: #e5b3b3;">Data Fragmentation</h3>
+                    <p>Reliance on disconnected, manual spreadsheets obscures true capital traceability for ESG and CSR donors, preventing outcome-based capital deployment.</p>
+                </div>
+                <div class="mck-box" style="border-top-color: #8b0000;">
+                    <h3 style="color: #8b0000; border-bottom-color: #e5b3b3;">DPDP Legal Liability</h3>
+                    <p>Traditional, name-based beneficiary tracking violates India's strict Digital Personal Data Protection (DPDP) Act, exposing NGOs and Corporate donors to regulatory fines.</p>
+                </div>
+            </div>
+            <div class="talking-track">
+                "Indwoke eliminates these liabilities through a proprietary three-pillar architecture."
+            </div>
+        </div>
+        <div class="tracker">2 / 20</div>
+    </div>
+
+    <div class="slide">
+        <div class="logo"><img src="INDIWOKE-Final-Logo-02-300x113.png" alt="Indwoke Logo"></div>
+        <div class="section-tag">I. Competitive Positioning</div>
+        <div class="action-title">By maximizing Data Rigor while minimizing Field Friction, Indwoke captures an uncontested, highly defensible whitespace.</div>
+        <div class="content-area">
+            <div class="skok-matrix">
+                <div class="matrix-quad-lines"></div>
+                <div class="matrix-quad-lines-h"></div>
+                
+                <div class="axis-label y-axis">Data Verification & Rigor</div>
+                <div class="axis-label x-axis">End-User Simplicity (Frictionless)</div>
+                
+                <div class="axis-label y-low">Low</div>
+                <div class="axis-label y-high">High</div>
+                <div class="axis-label x-low">Complex / High Friction</div>
+                <div class="axis-label x-high">Simple / Zero Friction</div>
+
+                <div class="whitespace-label">{ Indwoke Whitespace }</div>
+
+                <div class="bubble bubble-competitor" style="width: 80px; height: 80px; bottom: 15%; left: 15%;">Manual<br>Paper/Excel</div>
+                <div class="bubble bubble-competitor" style="width: 100px; height: 100px; top: 20%; left: 10%;">Enterprise<br>BI Tools</div>
+                <div class="bubble bubble-competitor" style="width: 70px; height: 70px; bottom: 30%; right: 25%;">Basic Survey<br>Apps</div>
+                
+                <div class="bubble bubble-indwoke" style="width: 120px; height: 120px; top: 15%; right: 15%;">INDWOKE<br>(Automated RCTs<br>Geo-Fenced)</div>
+            </div>
+        </div>
+        <div class="tracker">3 / 20</div>
+    </div>
+
+    <div class="slide">
+        <div class="logo"><img src="INDIWOKE-Final-Logo-02-300x113.png" alt="Indwoke Logo"></div>
+        <div class="section-tag">I. Solution Architecture</div>
+        <div class="action-title">Our proprietary architecture resolves field friction, eliminates privacy liability, and scales software IP.</div>
+        <div class="content-area">
+            <div class="three-col">
+                <div class="mck-box">
+                    <h3>1. Simple Interfaces</h3>
+                    <ul>
+                        <li>Offline-first mobile applications remove connectivity barriers.</li>
+                        <li>Automated background data queues process and delete media instantly upon handshake.</li>
+                    </ul>
+                </div>
+                <div class="mck-box">
+                    <h3>2. Cryptographic Tracking</h3>
+                    <ul>
+                        <li>Zero-knowledge cohort hashes track longitudinal progress.</li>
+                        <li>Zero PII is stored, structurally mitigating all DPDP risk.</li>
+                    </ul>
+                </div>
+                <div class="mck-box">
+                    <h3>3. Proof of Reality</h3>
+                    <ul>
+                        <li>In-app geo-fencing locks GPS coordinates and timestamps.</li>
+                        <li>Bypasses local device camera rolls to eliminate data spoofing entirely.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="talking-track">
+                "We are validating this architecture immediately through a non-dilutive, revenue-generating municipal pilot."
+            </div>
+        </div>
+        <div class="tracker">4 / 20</div>
+    </div>
+
+    <div class="slide">
+        <div class="logo"><img src="INDIWOKE-Final-Logo-02-300x113.png" alt="Indwoke Logo"></div>
+        <div class="section-tag">I. Operational Model</div>
+        <div class="action-title">The Dual-Entity Symbiosis allows Indwoke to capture scalable software IP while Amala executes high-touch field operations.</div>
+        <div class="content-area">
+            <div class="chevron-container" style="height: 120px; align-items: center;">
+                <div class="chevron chevron-light" style="flex: 1.5; padding-top: 35px; padding-bottom: 35px;">
+                    <strong>AMALA JEEVAN (Section 8) : The Proof Engine</strong><br><br>
+                    <span style="font-weight: normal; color:#333;">Executes offline safeguarding • Trains teachers • Manages municipal relationships</span>
+                </div>
+                <div class="chevron" style="flex: 1.5; padding-top: 35px; padding-bottom: 35px;">
+                    <strong>INDWOKE (For-Profit) : The Scalable Asset</strong><br><br>
+                    <span style="font-weight: normal; color:#e0effc;">Captures data via mobile app • Processes RCT analytics • Retains 100% Software IP</span>
+                </div>
+            </div>
+        </div>
+        <div class="tracker">5 / 20</div>
+    </div>
+
+    <div class="slide">
+        <div class="logo"><img src="INDIWOKE-Final-Logo-02-300x113.png" alt="Indwoke Logo"></div>
+        <div class="section-tag">II. Engineering & Tech Moat</div>
+        <div class="action-title">By eliminating digital PII at the source, Indwoke creates an inherently DPDP-compliant data vault.</div>
+        <div class="content-area">
+            <table class="mck-table">
+                <tr>
+                    <th style="width: 30%;">Data Governance Principle</th>
+                    <th>Implementation Mechanics</th>
+                    <th>Strategic Impact</th>
+                </tr>
+                <tr>
+                    <td><strong>Zero Digital PII</strong></td>
+                    <td>The application is hardcoded to reject the storage of names, personal addresses, or government identification numbers.</td>
+                    <td><span class="harvey-ball hb-full"></span> Eradicates identity theft vectors.</td>
+                </tr>
+                <tr>
+                    <td><strong>Absolute Compliance</strong></td>
+                    <td>By defining the database schemas without personal data fields, DPDP compliance is mathematically guaranteed.</td>
+                    <td><span class="harvey-ball hb-full"></span> Removes donor/board legal liability.</td>
+                </tr>
+                <tr>
+                    <td><strong>Policy Intelligence</strong></td>
+                    <td>Data is captured and aggregated exclusively at the institutional/cluster level (e.g., Ward, School, Clinic).</td>
+                    <td><span class="harvey-ball hb-full"></span> Builds systemic macro-insights without predatory data brokering.</td>
+                </tr>
+            </table>
+            <div class="talking-track">
+                "The following annexure slides detail the specific engineering mechanics and behavioral economics driving this platform."
+            </div>
+        </div>
+        <div class="tracker">6 / 20</div>
+    </div>
+
+    <div class="slide">
+        <div class="logo"><img src="INDIWOKE-Final-Logo-02-300x113.png" alt="Indwoke Logo"></div>
+        <div class="section-tag">II. Engineering & Tech Moat</div>
+        <div class="action-title">Non-PII demographic scrambling achieves absolute cryptographic privacy while enabling perfect longitudinal tracking.</div>
+        <div class="content-area">
+             <div class="chevron-container" style="justify-content: center; text-align: center;">
+                <div class="mck-box" style="margin-right: 20px; border-top-color: #666;">
+                    <strong>1. Input Variables</strong><br><br>
+                    Grade: 8th<br>Gender: Female<br>Birth Month: March
+                </div>
+                <div style="font-size: 30px; color: #002855; align-self: center;">➔</div>
+                <div class="mck-box" style="margin: 0 20px; background: #002855; color: white;">
+                    <strong style="color: white; border-bottom: 2px solid #335478; padding-bottom:10px; display:block;">2. Mathematical Blender</strong><br>
+                    One-Way SHA-256 Cryptographic Hash Algorithm
+                </div>
+                <div style="font-size: 30px; color: #002855; align-self: center;">➔</div>
+                <div class="mck-box" style="margin-left: 20px; border-top-color: #666;">
+                    <strong>3. Output Identifier</strong><br><br>
+                    <code style="background:#e9ecef; padding: 4px 6px; border-radius:3px; color:#c7254e;">a7f8b9...c3d4</code><br><br>Matches T=0 to T=1 seamlessly.
+                </div>
+            </div>
+            <div class="talking-track">
+                "This ensures our data science holds up to rigorous academic scrutiny while maintaining absolute privacy."
+            </div>
+        </div>
+        <div class="tracker">7 / 20</div>
+    </div>
+
+    <div class="slide">
+        <div class="logo"><img src="INDIWOKE-Final-Logo-02-300x113.png" alt="Indwoke Logo"></div>
+        <div class="section-tag">II. Engineering & Tech Moat</div>
+        <div class="action-title">Algorithmic cohort tracking resolves attrition bias by converting demographic churn into actionable systemic risk intelligence.</div>
+        <div class="content-area">
+            <div class="three-col">
+                <div class="mck-box">
+                    <h3>The Headcount Variable (N)</h3>
+                    <p>Field workers log cohort size (N) alongside the cryptographic hash during every assessment cycle (Baseline vs. Post-Assessment).</p>
+                </div>
+                <div class="mck-box">
+                    <h3>Detecting Variance (ΔN)</h3>
+                    <p>If cohort N drops significantly (e.g., from 15 to 9), the analytics engine automatically flags high migration or dropout rates.</p>
+                </div>
+                <div class="mck-box">
+                    <h3>Systemic Risk Output</h3>
+                    <p>This strict boundary prevents flawed RCT mean comparisons while delivering valuable macro-trend migration data directly to donors.</p>
+                </div>
+            </div>
+        </div>
+        <div class="tracker">8 / 20</div>
+    </div>
+
+    <div class="slide">
+        <div class="logo"><img src="INDIWOKE-Final-Logo-02-300x113.png" alt="Indwoke Logo"></div>
+        <div class="section-tag">II. Engineering & Tech Moat</div>
+        <div class="action-title">'Proof of Reality' cryptography bypasses formal digital infrastructure to authenticate informal field data at the first mile.</div>
+        <div class="content-area">
+            <div class="three-col">
+                <div class="mck-box">
+                    <h3>1. In-App Sandbox</h3>
+                    <p>The application restricts uploads from the native camera roll. Data must be captured live within the Indwoke interface, rendering backdated uploads impossible.</p>
+                </div>
+                <div class="mck-box">
+                    <h3>2. Encrypted Metadata</h3>
+                    <p>Every data object is instantly wrapped with un-spoofable GPS coordinates, a secure server timestamp, and a unique hardware device fingerprint.</p>
+                </div>
+                <div class="mck-box">
+                    <h3>3. Universal Verification</h3>
+                    <p>Eliminates the need for API integrations with formal government databases (e.g., GSTIN), allowing seamless verification of hyper-informal environments.</p>
+                </div>
+            </div>
+            <div class="talking-track">
+                "By securing the hardware layer, we eliminate 'pencil-whipping' and guarantee data authenticity without burdening the user."
+            </div>
+        </div>
+        <div class="tracker">9 / 20</div>
+    </div>
+
+    <div class="slide">
+        <div class="logo"><img src="INDIWOKE-Final-Logo-02-300x113.png" alt="Indwoke Logo"></div>
+        <div class="section-tag">III. Initial GTM (The Sandbox)</div>
+        <div class="action-title">Leveraging philanthropic grants as non-dilutive funding, Indwoke captures day-one revenue as a technical partner.</div>
+        <div class="content-area">
+            <div class="chevron-container" style="height: 100px; align-items: center; justify-content: center;">
+                <div class="chevron chevron-light" style="flex: 1; text-align: center;">
+                    <strong>The Philanthropist</strong><br><span style="font-weight: normal; font-size: 13px; color: #333;">Provides Grant Capital</span>
+                </div>
+                <div class="chevron chevron-light" style="flex: 1; text-align: center;">
+                    <strong>MCGM</strong><br><span style="font-weight: normal; font-size: 13px; color: #333;">Provides Admin Access</span>
+                </div>
+                <div class="chevron" style="flex: 1; text-align: center;">
+                    <strong>INDWOKE</strong><br><span style="font-weight: normal; font-size: 13px; color: #e0effc;">Paid <strong>₹10 Lakhs</strong> for M&E & IP</span>
+                </div>
+            </div>
+        </div>
+        <div class="tracker">10 / 20</div>
+    </div>
+
+    <div class="slide">
+        <div class="logo"><img src="INDIWOKE-Final-Logo-02-300x113.png" alt="Indwoke Logo"></div>
+        <div class="section-tag">III. Initial GTM (The Sandbox)</div>
+        <div class="action-title">The 90-day M Ward RCT boundaries dictate our initial Minimum Viable Product (MVP) operational scope.</div>
+        <div class="content-area">
+            <table class="mck-table" style="width: 80%; margin: 0 auto;">
+                <tr><th style="width: 40%;">Pilot Component</th><th>Parameter Specifications</th></tr>
+                <tr><td><strong>Pilot Duration</strong></td><td>90 Days</td></tr>
+                <tr><td><strong>Study Area</strong></td><td>M Ward (Municipal Corporation of Greater Mumbai)</td></tr>
+                <tr><td><strong>Sample Size</strong></td><td>20 Municipal Schools</td></tr>
+                <tr><td><strong>Study Design</strong></td><td>Randomized Controlled Trial (RCT)</td></tr>
+                <tr><td><strong>Target Beneficiaries</strong></td><td>Students, Teachers, School Staff, Parents & Caregivers</td></tr>
+            </table>
+        </div>
+        <div class="tracker">11 / 20</div>
+    </div>
+
+    <div class="slide">
+        <div class="logo"><img src="INDIWOKE-Final-Logo-02-300x113.png" alt="Indwoke Logo"></div>
+        <div class="section-tag">III. Initial GTM (The Sandbox)</div>
+        <div class="action-title">Algorithmic allocation prevents selection bias, while 'Wait-List' incentives solve Control Group engagement inertia.</div>
+        <div class="content-area">
+            <div class="three-col">
+                <div class="mck-box">
+                    <h3>Random Allocation</h3>
+                    <p>The system ingests 20 onboarded schools and automatically executes statistical splits into Intervention (10) and Comparison (10) groups.</p>
+                </div>
+                <div class="mck-box">
+                    <h3>Comparison Workflows</h3>
+                    <p>Comparison schools are interacted with exactly twice (baseline and post-assessment), strictly capping friction to ensure low study abandonment.</p>
+                </div>
+                <div class="mck-box">
+                    <h3>The Wait-List Incentive</h3>
+                    <p>We incentivize comparison schools by formally guaranteeing that compliant data sharing puts them first in line for the Phase II funded rollout.</p>
+                </div>
+            </div>
+        </div>
+        <div class="tracker">12 / 20</div>
+    </div>
+
+    <div class="slide">
+        <div class="logo"><img src="INDIWOKE-Final-Logo-02-300x113.png" alt="Indwoke Logo"></div>
+        <div class="section-tag">III. Initial GTM (The Sandbox)</div>
+        <div class="action-title">Automated analytics convert raw metrics into decision-grade artifacts for municipal and donor oversight.</div>
+        <div class="content-area">
+            <div class="two-col">
+                <div style="flex: 1; display: flex; flex-direction: column; gap: 20px;">
+                    <div class="mck-box" style="height: auto;">
+                        <h3>20 Readiness Profiles</h3>
+                        <p>Baseline operational metrics for all participating schools, ready for immediate donor review.</p>
+                    </div>
+                    <div class="mck-box" style="height: auto;">
+                        <h3>10 Safeguarding Report Cards</h3>
+                        <p>Intervention-specific outcome tracking demonstrating exact capital efficiency to the philanthropist.</p>
+                    </div>
+                </div>
+                
+                <div class="mck-box" style="flex: 1.5; border-top-color: #002855;">
+                    <h3 style="text-align: center; border-bottom: none;">Comparative RCT Evaluation: M Ward Dashboard</h3>
+                    
+                    <div class="bar-chart">
+                        <div style="position: absolute; left: -35px; bottom: 0; height: 100%; display: flex; flex-direction: column; justify-content: space-between; font-size: 11px; color: #444; font-weight:bold;">
+                            <span>100%</span><span>50%</span><span>0%</span>
+                        </div>
+                        <div class="bar-group" style="margin-left: 20px;">
+                            <div class="bar-col">
+                                <div class="bar" style="height: 45%;"><div class="bar-val">45%</div></div>
+                                <span class="bar-label">Baseline</span>
+                            </div>
+                            <div class="bar-col">
+                                <div class="bar" style="height: 48%;"><div class="bar-val">48%</div></div>
+                                <span class="bar-label">Endline</span>
+                            </div>
+                        </div>
+                        <div class="bar-group">
+                            <div class="bar-col">
+                                <div class="bar" style="height: 42%;"><div class="bar-val">42%</div></div>
+                                <span class="bar-label">Baseline</span>
+                            </div>
+                            <div class="bar-col">
+                                <div class="bar bar-primary" style="height: 85%;"><div class="bar-val" style="color: #002855;">85%</div></div>
+                                <span class="bar-label">Endline</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display: flex; justify-content: space-around; margin-top: 15px; font-weight: bold; font-size: 13px; color: #222; padding-left: 30px;">
+                        <span>Control Group (n=10)</span>
+                        <span>Intervention Group (n=10)</span>
+                    </div>
+                </div>
+            </div>
+            <div class="talking-track">
+                "This initial dashboard serves as the exact commercial trigger we need to unlock our three target enterprise segments."
+            </div>
+        </div>
+        <div class="tracker">13 / 20</div>
+    </div>
+
+    <div class="slide">
+        <div class="logo"><img src="INDIWOKE-Final-Logo-02-300x113.png" alt="Indwoke Logo"></div>
+        <div class="section-tag">IV. Diagonal Expansion & Scale</div>
+        <div class="action-title">The same infrastructure built for municipal schools perfectly resolves corporate ESG and BRSR compliance.</div>
+        <div class="content-area">
+            <div class="three-col">
+                <div class="mck-box">
+                    <h3>The Massive TAM</h3>
+                    <p>New SEBI BRSR Core guidelines legally mandate that large Indian enterprises must report standardized ESG metrics for thousands of downstream suppliers.</p>
+                </div>
+                <div class="mck-box">
+                    <h3>The Shared Problem</h3>
+                    <p>Corporations lack the infrastructure to capture statutory compliance data from small, informal, last-mile supply chain vendors without massive overhead.</p>
+                </div>
+                <div class="mck-box">
+                    <h3>The Technical Pivot</h3>
+                    <p>We apply our proven geo-fenced "Proof of Reality" technology and offline-first forms to verify corporate vendor operations securely at the first mile.</p>
+                </div>
+            </div>
+        </div>
+        <div class="tracker">14 / 20</div>
+    </div>
+
+    <div class="slide">
+        <div class="logo"><img src="INDIWOKE-Final-Logo-02-300x113.png" alt="Indwoke Logo"></div>
+        <div class="section-tag">IV. Diagonal Expansion & Scale</div>
+        <div class="action-title">The 'Verified Vendor Passport' structurally incentivizes high-fidelity data entry by accelerating vendor sales cycles.</div>
+        <div class="content-area">
+            <div class="chevron-container" style="text-align: center; height: 100px; align-items: center;">
+                <div class="chevron chevron-light">
+                    <strong>1. The Compliance Trigger</strong><br><span style="font-weight: normal; font-size: 13px; color:#333;">Vendors complete ESG surveys on Indwoke to satisfy corporate buyers.</span>
+                </div>
+                <div class="chevron chevron-light">
+                    <strong>2. The Reward Mechanism</strong><br><span style="font-weight: normal; font-size: 13px; color:#333;">Platform issues a portable, digitally signed "Verified Passport".</span>
+                </div>
+                <div class="chevron">
+                    <strong>3. The Viral Loop</strong><br><span style="font-weight: normal; font-size: 13px; color:#e0effc;">Vendor shares passport with NEW buyers, driving $0 CAC leads.</span>
+                </div>
+            </div>
+            <div class="talking-track">
+                "We do not rely on corporate mandates alone; we make the platform inherently valuable to the vendor's own bottom line."
+            </div>
+        </div>
+        <div class="tracker">15 / 20</div>
+    </div>
+
+    <div class="slide">
+        <div class="logo"><img src="INDIWOKE-Final-Logo-02-300x113.png" alt="Indwoke Logo"></div>
+        <div class="section-tag">IV. Diagonal Expansion & Scale</div>
+        <div class="action-title">Decoupling the user from the buyer isolates the revenue model, driving high-margin SaaS licensing via top-down mandates.</div>
+        <div class="content-area">
+            <table class="mck-table">
+                <tr>
+                    <th style="width: 33%;">Stakeholder Layer</th>
+                    <th style="width: 33%;">Economic Mechanism</th>
+                    <th style="width: 33%;">Strategic Impact</th>
+                </tr>
+                <tr>
+                    <td><strong>End Users</strong><br><span style="color:#555; font-size: 12px;">(Vendors / Field Workers)</span></td>
+                    <td>Utilize the platform at <strong style="color:#002855;">zero cost</strong>.</td>
+                    <td><span class="harvey-ball hb-full"></span> Removes all financial adoption inertia at the last mile.</td>
+                </tr>
+                <tr>
+                    <td><strong>Enterprise Buyers</strong><br><span style="color:#555; font-size: 12px;">(Corporations / Donors)</span></td>
+                    <td>Pay high-value <strong style="color:#002855;">₹25L–₹50L annual enterprise licenses</strong>.</td>
+                    <td><span class="harvey-ball hb-full"></span> Monetizes institutional regulatory risk at software margins.</td>
+                </tr>
+                <tr>
+                    <td><strong>Ecosystem Mandates</strong><br><span style="color:#555; font-size: 12px;">(Top-Down Enforcement)</span></td>
+                    <td>Enterprise enforces adoption across network as prerequisite for payment.</td>
+                    <td><span class="harvey-ball hb-full"></span> Ensures immediate, mass platform scaling without direct B2C marketing.</td>
+                </tr>
+            </table>
+            <div class="talking-track">
+                "This structure ensures our software scales virally across supply chains while capturing venture-scale margins at the enterprise level."
+            </div>
+        </div>
+        <div class="tracker">16 / 20</div>
+    </div>
+
+    <div class="slide">
+        <div class="logo"><img src="INDIWOKE-Final-Logo-02-300x113.png" alt="Indwoke Logo"></div>
+        <div class="section-tag">IV. Diagonal Expansion & Scale</div>
+        <div class="action-title">The Day 91 Revenue Sprint targets three hyper-specific enterprise buyers to immediately scale our SaaS revenue.</div>
+        <div class="content-area">
+            <table class="mck-table">
+                <tr><th>Buyer Persona</th><th>Value Pitch</th><th>Unit Economics</th></tr>
+                <tr>
+                    <td><strong>Adjacent Educational NGOs</strong></td>
+                    <td>"We just delivered an automated RCT for MCGM. Automate your impact evidence to guarantee your CSR funding."</td>
+                    <td style="color: #002855; font-weight: 700;">₹2L–₹5L Annual SaaS</td>
+                </tr>
+                <tr>
+                    <td><strong>Mid-Sized Architects (ESG)</strong></td>
+                    <td>"Replace manual site compliance with offline verification. Give corporate clients an un-spoofable BRSR dashboard."</td>
+                    <td style="color: #002855; font-weight: 700;">₹10L–₹15L Enterprise License</td>
+                </tr>
+                <tr>
+                    <td><strong>Philanthropic Networks</strong></td>
+                    <td>"Mandate the Indwoke OS across your entire 2027 grantee portfolio to eliminate your own capital waste."</td>
+                    <td style="color: #002855; font-weight: 700;">₹25L+ Portfolio License</td>
+                </tr>
+            </table>
+            <div class="talking-track">
+                "To execute this 18-month expansion and reach Series A readiness, we have defined strict operational milestones."
+            </div>
+        </div>
+        <div class="tracker">17 / 20</div>
+    </div>
+
+    <div class="slide">
+        <div class="logo"><img src="INDIWOKE-Final-Logo-02-300x113.png" alt="Indwoke Logo"></div>
+        <div class="section-tag">V. Milestones & Financials</div>
+        <div class="action-title">Months 1-6: Execute the pilot, secure initial commercial SaaS contracts, and achieve break-even to retire seed debt.</div>
+        <div class="content-area">
+            <div class="three-col">
+                <div class="mck-box">
+                    <h3>The Hustle</h3>
+                    <p>Initial MVP development has been fiercely bootstrapped by the founders, proving deep conviction and lean execution capabilities.</p>
+                </div>
+                <div class="mck-box">
+                    <h3>The Deliverable</h3>
+                    <p>Successfully deliver the MCGM automated dashboards and RCT analytics to clear the ₹10 Lakh technical partnership fee.</p>
+                </div>
+                <div class="mck-box" style="background: #e9ecef; border-top-color: #002855;">
+                    <h3>The Financial Imperative</h3>
+                    <p>Generate sufficient immediate revenue by Month 6 to retire the CEO's initial Friends & Family seed loan, clearing the cap table.</p>
+                </div>
+            </div>
+        </div>
+        <div class="tracker">18 / 20</div>
+    </div>
+
+    <div class="slide">
+        <div class="logo"><img src="INDIWOKE-Final-Logo-02-300x113.png" alt="Indwoke Logo"></div>
+        <div class="section-tag">V. Milestones & Financials</div>
+        <div class="action-title">Months 6-12: Transition from captive pilot deployments to standardized, third-party enterprise SaaS licensing.</div>
+        <div class="content-area">
+            <div class="three-col">
+                <div class="mck-box">
+                    <h3>Pre-Sell (Day 45)</h3>
+                    <p>Initiate "warm" executive briefings with target enterprise buyers to showcase live Institutional Readiness Profiles from the pilot.</p>
+                </div>
+                <div class="mck-box">
+                    <h3>Productize (Day 80)</h3>
+                    <p>Draft the finalized Comparative RCT Report into a glossy, sanitized B2B white paper for aggressive outbound sales.</p>
+                </div>
+                <div class="mck-box" style="background: #002855; color: white;">
+                    <h3 style="color: white; border-bottom-color: #335478;">The Decoupling Metric</h3>
+                    <p style="color: white;">By Month 12, achieve 50% of revenue derived strictly from third-party enterprise software licenses independent of Amala.</p>
+                </div>
+            </div>
+        </div>
+        <div class="tracker">19 / 20</div>
+    </div>
+
+    <div class="slide">
+        <div class="logo"><img src="INDIWOKE-Final-Logo-02-300x113.png" alt="Indwoke Logo"></div>
+        <div class="section-tag">V. Milestones & Financials</div>
+        <div class="action-title">Months 12-18: Onboard 250+ institutional profiles and achieve ₹50 Lakhs to ₹1 Crore in ARR to trigger Series A scale funding.</div>
+        <div class="content-area">
+            <div style="text-align: center; margin: 30px 0;">
+                <div style="font-size: 54px; color: #002855; font-weight: bold; border-bottom: 3px solid #002855; display: inline-block; padding-bottom: 10px;">₹50L - ₹1Cr ARR</div>
+                <div style="font-size: 16px; color: #333; margin-top: 15px; text-transform: uppercase; letter-spacing: 1.5px; font-weight: bold;">Targeted Pure Software Subscription Revenue</div>
+            </div>
+            <div class="three-col">
+                <div class="mck-box" style="text-align: center;">
+                    <h3 style="border-bottom:none;">Network Scale</h3>
+                    <strong style="font-size: 18px;">250+ Profiles</strong><br><span style="font-size: 14px; color: #555; display: block; margin-top: 8px;">Generating longitudinal intelligence.</span>
+                </div>
+                <div class="mck-box" style="text-align: center;">
+                    <h3 style="border-bottom:none;">Data Defensibility</h3>
+                    <strong style="font-size: 18px;">Zero Breaches</strong><br><span style="font-size: 14px; color: #555; display: block; margin-top: 8px;">100% DPDP compliance maintained.</span>
+                </div>
+                <div class="mck-box" style="text-align: center; background: #e9ecef;">
+                    <h3 style="border-bottom:none;">Venture Readiness</h3>
+                    <strong style="font-size: 18px;">Series A</strong><br><span style="font-size: 14px; color: #555; display: block; margin-top: 8px;">Prepared for institutional scale capital.</span>
+                </div>
+            </div>
+        </div>
+        <div class="tracker">20 / 20</div>
+    </div>
+
+</div>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+
+    function showSlide(index) {
+        slides.forEach((slide, i) => {
+            if(i === index) {
+                slide.classList.add('active');
+            } else {
+                slide.classList.remove('active');
+            }
+        });
+    }
+
+    function nextSlide() {
+        if(currentSlide < slides.length - 1) {
+            currentSlide++;
+            showSlide(currentSlide);
+        }
+    }
+
+    function prevSlide() {
+        if(currentSlide > 0) {
+            currentSlide--;
+            showSlide(currentSlide);
+        }
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if(e.key === 'ArrowRight' || e.key === 'Spacebar' || e.key === ' ') {
+            nextSlide();
+        } else if (e.key === 'ArrowLeft') {
+            prevSlide();
+        }
+    });
+</script>
+
+</body>
+</html>
